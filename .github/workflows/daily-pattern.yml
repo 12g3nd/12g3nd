@@ -1,0 +1,38 @@
+name: Daily pattern
+
+on:
+  schedule:
+    # Runs at 00:05 UTC every day. (GitHub Actions cron can be delayed
+    # by up to ~30 min during peak load — that's fine for this.)
+    - cron: '5 0 * * *'
+  workflow_dispatch:  # Allow running manually from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate today's pattern
+        run: node scripts/generate-pattern.js
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [[ -n "$(git status --porcelain pattern.svg)" ]]; then
+            git add pattern.svg
+            git commit -m "🌀 daily pattern: $(date -u +%Y-%m-%d)"
+            git push
+          else
+            echo "No changes to commit."
+          fi
