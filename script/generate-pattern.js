@@ -6,13 +6,14 @@ const fs = require('fs');
 const path = require('path');
 
 // ── Tunables ──────────────────────────────────────────────────────────
-const SIZE         = 800;     // Canvas size (square)
-const NUM_LINES    = 500;     // Number of flow lines
-const STEPS        = 80;      // Max steps per line
+const WIDTH        = 1200;    // Banner width
+const HEIGHT       = 300;     // Banner height (4:1 aspect ratio)
+const NUM_LINES    = 700;     // Number of flow lines
+const STEPS        = 90;      // Max steps per line
 const STEP_SIZE    = 1.6;     // Distance per step
 const STROKE_WIDTH = 0.7;
 const OPACITY      = 0.45;
-const NOISE_BASE   = 0.030;   // Base spatial frequency. Lower = larger features.
+const NOISE_BASE   = 0.028;   // Base spatial frequency. Lower = larger features.
 
 // ── Seeded PRNG (mulberry32) ──────────────────────────────────────────
 function mulberry32(seed) {
@@ -51,14 +52,14 @@ function buildPaths(seed) {
 
   const lines = [];
   for (let i = 0; i < NUM_LINES; i++) {
-    let x = rand() * SIZE;
-    let y = rand() * SIZE;
+    let x = rand() * WIDTH;
+    let y = rand() * HEIGHT;
     let d = `M ${x.toFixed(1)} ${y.toFixed(1)}`;
     for (let s = 0; s < STEPS; s++) {
       const a = fieldAngle(x, y);
       x += Math.cos(a) * STEP_SIZE;
       y += Math.sin(a) * STEP_SIZE;
-      if (x < 0 || x > SIZE || y < 0 || y > SIZE) break;
+      if (x < 0 || x > WIDTH || y < 0 || y > HEIGHT) break;
       d += ` L ${x.toFixed(1)} ${y.toFixed(1)}`;
     }
     lines.push(`  <path d="${d}"/>`);
@@ -70,7 +71,7 @@ function buildPaths(seed) {
 function buildSvg(seed) {
   const today = new Date().toISOString().slice(0, 10);
   const paths = buildPaths(seed);
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SIZE} ${SIZE}" width="${SIZE}" height="${SIZE}" role="img" aria-labelledby="t d">
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${WIDTH} ${HEIGHT}" width="${WIDTH}" height="${HEIGHT}" role="img" aria-labelledby="t d">
   <title id="t">Daily flow field, ${today}</title>
   <desc id="d">A generative SVG, regenerated each day from a date-seeded RNG. Seed: ${seed}.</desc>
   <style>

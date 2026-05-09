@@ -25,12 +25,19 @@ jobs:
       - name: Generate today's pattern
         run: node scripts/generate-pattern.js
 
+      - name: Bump cache-busting query string in README
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+          # Replace any existing pattern.svg?v=<token> with today's date.
+          # Matches up to the next quote, apostrophe, space, or '>'.
+          sed -i -E "s|pattern\.svg\?v=[^\"' >]+|pattern.svg?v=${TODAY}|g" README.md
+
       - name: Commit if changed
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [[ -n "$(git status --porcelain pattern.svg)" ]]; then
-            git add pattern.svg
+          git add pattern.svg README.md
+          if ! git diff --staged --quiet; then
             git commit -m "🌀 daily pattern: $(date -u +%Y-%m-%d)"
             git push
           else
