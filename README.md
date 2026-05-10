@@ -1,4 +1,7 @@
 <p align="center">
+  <img src="name.svg" alt="Srihith Jarabana" width="700" />
+</p>
+<p align="center">
   <img src="pattern.svg?v=2026-05-10" alt="Today's flow field, regenerated daily" width="900" />
 </p>
 <p align="center">
