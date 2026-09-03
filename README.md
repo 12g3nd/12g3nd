@@ -2,7 +2,7 @@
   <img src="name.svg" alt="Srihith Jarabana" width="700" />
 </p>
 <p align="center">
-  <img src="pattern.svg?v=2026-09-02" alt="Today's flow field, regenerated daily" width="900" />
+  <img src="pattern.svg?v=2026-09-03" alt="Today's flow field, regenerated daily" width="900" />
 </p>
 <p align="center">
   <sub>
